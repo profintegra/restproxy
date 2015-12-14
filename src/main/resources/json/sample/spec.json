@@ -1,0 +1,15 @@
+[
+	{
+		"operation": "shift",
+		"spec": {
+			"data": {
+				"autocompletion": {
+					"*": {
+						"@": "searchEntries[&].name",
+						"$": "searchEntries[&].id"
+					}
+				}
+			}
+		}
+	}
+]

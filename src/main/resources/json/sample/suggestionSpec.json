@@ -1,0 +1,14 @@
+[
+	{
+		"operation": "shift",
+		"spec": {
+			"data": {
+				"entries": {
+					"*": {
+						"@": "search/searchSuggestion[&]"
+					}
+				}
+			}
+		}
+	}
+]
