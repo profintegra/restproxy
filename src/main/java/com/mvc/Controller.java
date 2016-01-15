@@ -91,7 +91,8 @@ public class Controller extends HttpServlet implements Servlet {
     protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     	// TODO Auto-generated method stub
     	resp.setHeader("Access-Control-Allow-Origin", "*");
-    	resp.setHeader("Access-Control-Allow-Headers", "accept, another_header, coockie");
+    	resp.setHeader("Access-Control-Allow-Headers", "accept, another_header, coockie, content-type");
+    	resp.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT");
     	super.doOptions(req, resp);
     }
 }

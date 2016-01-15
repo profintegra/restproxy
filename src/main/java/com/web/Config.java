@@ -23,7 +23,7 @@ public class Config {
     }
 
 	private File configFile;
-	private int port = 8080;
+	private int port = 8081;
 	private String host = "0.0.0.0";
 	public String staticRoot = "/static";
 	public static final String DATA_BASE_PATH = "jdbc:mysql://54.200.32.22/bets";

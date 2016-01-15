@@ -1,0 +1,15 @@
+[
+	{
+		"operation": "shift",
+		"spec": {
+			"payload": {
+				"field": {
+					"*": {
+						"@": "search/suggestions/searchMetaItem[&]",
+						"$": "search/suggestions/searchMetaItem[&].id"
+					}
+				}
+			}
+		}
+	}
+]

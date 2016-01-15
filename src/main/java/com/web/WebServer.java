@@ -28,6 +28,10 @@ public class WebServer {
 	    server.add("/a4/A4Studio/leftNavEntries", new LeftNavEntries());
 	    server.add("/a4/A4Studio/searchEntries", new SearchEntries());
 	    server.add("/a4/A4Studio/search/searchSuggestions", new SearchSuggestions());
+	    server.add("/a4/A4Studio/search/suggestions/searchMetaItems", new EntryMetadata());
+	    server.add("/a4/A4Studio/editedMetaList", new EditMetadata());
+	    server.add("/a4/A4Studio/uploadMeta", new UploadMeta());
+	    //http://mgr.vizrt.it/api/asset/item/2101510200000003621/metadata?krrr=0.841651865048334 - update metadata
         System.out.println("Init completed.");
     }
 
