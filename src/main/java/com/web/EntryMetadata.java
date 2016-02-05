@@ -16,6 +16,7 @@ import com.mvc.JsonView;
 import com.mvc.PathParser;
 import com.mvc.View;
 import com.util.Request;
+import com.web.utils.HeaderBuilder;
 
 public class EntryMetadata extends Controller {
 	
@@ -24,13 +25,16 @@ public class EntryMetadata extends Controller {
 	public View get(HttpServletRequest request, PathParser pathInfo) throws Exception {
 		
 		String id = request.getParameter("id");
-		String url = UrlConstants.METADATA_URL;
+		String term = request.getParameter("term");
+		String url = Request.prepareMetaUrl(id, term);
+		
 		if(StringUtils.isNotBlank(id)){
 			
 			final int PRETTY_PRINT_INDENT_FACTOR = 4;
-			String body = Request.excutePost(String.format(url, id), Request.getMetadataHeaders());
+			String body = Request.excuteGet(String.format(url, id), new HeaderBuilder().authorization().acceptAll().build());
 			
 			JSONObject xmlJSONObj = XML.toJSONObject(body);
+			
 			String jsonPrettyPrintString = xmlJSONObj.toString();
 			List chainrSpecJSON = JsonUtils.classpathToList( "/json/sample/metadataSpec.json" );
 	        Chainr chainr = Chainr.fromSpec( chainrSpecJSON );

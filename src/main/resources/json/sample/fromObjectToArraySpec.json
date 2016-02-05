@@ -1,0 +1,10 @@
+[
+	{
+		"operation": "shift",
+		"spec": {
+			"payload": {
+				"field": "payload.field[]"
+			}
+		}
+	}
+]

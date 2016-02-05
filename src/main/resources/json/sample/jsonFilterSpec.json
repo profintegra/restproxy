@@ -1,0 +1,27 @@
+[
+	{
+		"operation": "shift",
+		"spec": {
+			"atom:feed": {
+				"search:facets": {
+					"atom:title": "search/searchSuggestionFilter[#2].title",
+					"atom:category": "search/searchSuggestionFilter[#2].category",
+					"search:facetType": "search/searchSuggestionFilter[#2].facetType",
+					"search:facetName": "search/searchSuggestionFilter[#2].facetName",
+					"search:start": "search/searchSuggestionFilter[#2].start",
+					"search:end": "search/searchSuggestionFilter[#2].end"
+				}
+			}
+		}
+	},
+	{
+		"operation": "default",
+		"spec": {
+			"search/searchSuggestionFilter[]": {
+				"*": {
+					"id": 0
+				}
+			}
+		}
+	}
+]

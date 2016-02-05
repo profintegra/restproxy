@@ -21,6 +21,7 @@ import com.mvc.JsonView;
 import com.mvc.PathParser;
 import com.mvc.View;
 import com.util.Request;
+import com.web.utils.HeaderBuilder;
 
 public class SearchSuggestions extends Controller {
 
@@ -30,16 +31,11 @@ public class SearchSuggestions extends Controller {
 		// TODO Auto-generated method stub
 		String clear = request.getParameter("name");
 		String url = "";
-//		if(StringUtils.isBlank(clear))
-//			url = "http://mgr.vizrt.it/api/search/item?num=10&start=1&qProfile=item-default&qFacet=on&qHighlightMode=vms&krrr=0.7290897415950894";
-//		item?num=10&start=1&qProfile=item-default&qFacet=on&qHighlightMode=vms&krrr=0.7290897415950894
 		String searchItem = URLEncoder.encode(request.getParameter("name"), "UTF-8").replaceAll("\\+", "%20");
-		
-		if(clear.equals("@"))
-			url = UrlConstants.EMPTY_SEARCH;
-		else
-			url = String.format(UrlConstants.ENTITY_SEARCH, searchItem);
-		String data = Request.excutePost(url, Request.getDefaultHeaders());
+		String term = request.getParameter("term");
+
+		url = Request.prepareSearchUrl(searchItem, term);
+		String data = Request.excuteGet(Request.modifyUrl(url, request.getParameterMap()), new HeaderBuilder().authorization().acceptJson().build());
 		List chainrSpecJSON = JsonUtils.classpathToList( "/json/sample/suggestionSpec.json" );
         Chainr chainr = Chainr.fromSpec( chainrSpecJSON );
         Object transformedOutput = chainr.transform( JsonUtils.jsonToObject(data) );

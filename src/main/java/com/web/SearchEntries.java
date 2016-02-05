@@ -24,6 +24,7 @@ import com.mvc.JsonView;
 import com.mvc.PathParser;
 import com.mvc.View;
 import com.util.Request;
+import com.web.utils.HeaderBuilder;
 
 public class SearchEntries extends Controller {
 
@@ -32,39 +33,19 @@ public class SearchEntries extends Controller {
 	public View get(HttpServletRequest request, PathParser pathInfo) throws Exception {
 		// TODO Auto-generated method stub
 		String searchItem = request.getParameter("name");
-		String url = String.format(UrlConstants.AUTOCOMPLETE_OFFER_URL, searchItem);
+		String term = request.getParameter("term");
+		if(StringUtils.isBlank(term)) term = "item-default";
+		String url = String.format(UrlConstants.AUTOCOMPLETE_OFFER_URL, searchItem, term);
 		Object entry = getEntry(url);
 		
 		return new JsonView(entry);
 	}
 	
 	private Object getEntry(String url){
-		String data = Request.excutePost(url, Request.getDefaultHeaders());
+		String data = Request.excuteGet(url, new HeaderBuilder().authorization().acceptJson().build());
 		List chainrSpecJSON = JsonUtils.classpathToList( "/json/sample/spec.json" );
         Chainr chainr = Chainr.fromSpec( chainrSpecJSON );
         return chainr.transform( JsonUtils.jsonToObject(data) );
-	}
-	
-//	private Object fillMetadata(Object entry){
-//		String id = new JSONObject(entry.toString()).getString("id");
-//		String url = "http://mgr.vizrt.it/api/asset/item/%s/metadata";
-//		if(StringUtils.isNotBlank(id)){			
-//			final int PRETTY_PRINT_INDENT_FACTOR = 4;
-//			String body = Request.excutePost(String.format(url, id), Request.getMetadataHeaders());
-//			
-//			JSONObject xmlJSONObj = XML.toJSONObject(body);
-//			String jsonPrettyPrintString = xmlJSONObj.toString();
-//			List chainrSpecJSON = JsonUtils.classpathToList( "/json/sample/metadataSpec.json" );
-//	        Chainr chainr = Chainr.fromSpec( chainrSpecJSON );
-//	        Object transformedOutput = chainr.transform( JsonUtils.jsonToObject(jsonPrettyPrintString) );
-//			return new JsonView(transformedOutput);
-//	}
-	
-	private static class SearchEntry{
-		private int id;
-		private String name;
-	}
-	
-	
+	}	
 	
 }

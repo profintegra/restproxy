@@ -21,6 +21,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stax.StAXResult;
 import javax.xml.transform.stax.StAXSource;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.util.StringUtil;
 import org.json.JSONObject;
@@ -47,11 +48,14 @@ public class UploadMeta extends Controller {
 				
 		if(StringUtil.isNotBlank(request.getParameter("id")) && StringUtil.isNotBlank(request.getParameter("xmlns"))){
 			String xml = convertJsonToXml(getJsonFromRequest(request));
-			String path = String.format(UrlConstants.METADATA_URL, request.getParameter("id"));
-			
-			xml = xml.replaceFirst("<payload>", "<payload xmlns=\""+request.getParameter("xmlns")+"\" model=\""+UrlConstants.EDIT_METADATA_URL+"\">");
+			String id = request.getParameter("id");
+			String term = request.getParameter("term");
+			String url = Request.prepareMetaUrl(id, term);	
+
+			url = String.format(url, id);
+			xml = xml.replaceFirst("<payload>", "<payload xmlns=\""+request.getParameter("xmlns")+"\" model=\""+Request.prepareMetaSchemaUrl(term)+"\">");
 			 
-			Request.uploadMetaData(path, xml);
+			Request.uploadMetaData(url, xml);
 			return new XmlView(xml);
 		}		
 		

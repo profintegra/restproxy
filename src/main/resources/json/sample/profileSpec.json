@@ -1,0 +1,15 @@
+[
+	{
+		"operation": "shift",
+		"spec": {
+			"data": {
+				"entries": {
+					"*": {
+						"@": "profileDetail[#2]",
+						"$": "profileDetail[#2].id"
+					}
+				}
+			}
+		}
+	}
+]

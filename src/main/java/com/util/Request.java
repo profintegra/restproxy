@@ -6,39 +6,120 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.omg.CORBA.portable.InputStream;
+
+import com.constants.UrlConstants;
+import com.web.utils.HeaderBuilder;
 
 public class Request {
 	
-	public static Map<String, String> getDefaultHeaders(){
-		Map<String, String> headers = new HashMap<String, String>();
-		headers.put("Accept", "application/json");
-		headers.put("Authorization", "Basic dXVzZXI6SW5tZWRpYQ==");
-		return headers;
+	private static final String SERIES_SEARCH = "series";
+	private static final String PROGRAM_SEARCH = "program";
+	private static final String FOLDER_SEARCH = "folder";
+	private static final String ITEM_SET_SEARCH = "itemset";
+	private static final String LOG_TRACK_ITEM_SEARCH = "logtrackitem";
+	
+
+	public static String prepareSearchUrl(String searched, String term){
+		
+		String url = "";
+		
+		if(StringUtils.isNotBlank(term)){
+			switch(term){
+				case SERIES_SEARCH:
+				case PROGRAM_SEARCH:
+				case FOLDER_SEARCH:
+					url = UrlConstants.COLLECTION_SEARCH;
+					break;
+				case ITEM_SET_SEARCH:
+					url = UrlConstants.PACKAGES_SEARCH;
+					break;
+				case LOG_TRACK_ITEM_SEARCH:
+					url = UrlConstants.ENTRIES_SEARCH;
+					break;
+				default:
+					url = UrlConstants.ITEM_SEARCH;
+			}
+			if(searched.equals("%40"))
+				return String.format(url, term);
+			else
+				return String.format(url + "&search.default=%s", term, searched);
+		}
+		
+		return String.format(UrlConstants.ENTITY_SEARCH, searched);
+		
 	}
 	
-	public static Map<String, String> getMetadataHeaders(){
-		Map<String, String> headers = getDefaultHeaders();
-		headers.put("Accept", "*/*");
-		return headers;
+	public static String prepareMetaSchemaUrl(String term){
+
+		if(StringUtils.isNotBlank(term)){
+			switch(term){
+				case SERIES_SEARCH:
+					return UrlConstants.SERIES_META_SCHEMA_URL;
+				case PROGRAM_SEARCH:
+					return UrlConstants.PROGRAM_META_SCHEMA_URL;
+				case LOG_TRACK_ITEM_SEARCH:
+				case FOLDER_SEARCH:
+				case ITEM_SET_SEARCH:				
+				default:
+					return UrlConstants.ITEM_META_SCHEMA_URL;
+			}			
+		}		
+		return UrlConstants.ITEM_META_SCHEMA_URL;		
 	}
 	
-	public static Map<String, String> getUploadMetaHeaders(){
-		Map<String, String> headers = getDefaultHeaders();
-		headers.put("Accept", "application/vnd.vizrt.payload+xml");
-		headers.put("Content-Type", "application/vnd.vizrt.payload+xml");
-		headers.put("Connection", "keep-alive");
-		return headers;
+	public static String prepareMetaUrl(String id, String term){
+		
+		String url = "";
+		
+		if(StringUtils.isNotBlank(term)){
+			switch(term){
+				case SERIES_SEARCH:
+				case PROGRAM_SEARCH:
+				case FOLDER_SEARCH:
+					url = UrlConstants.COLLECTION_META;//, term, searched);
+					break;
+				case ITEM_SET_SEARCH:
+					url = UrlConstants.PACKAGES_META;//, term, searched);
+					break;
+				case LOG_TRACK_ITEM_SEARCH:
+					url = UrlConstants.ENTRIES_META;//, term, searched);
+					break;
+				default:
+					url = UrlConstants.METADATA_URL;
+			}
+			
+			return String.format(url, id);
+			
+		}
+		
+		return String.format(UrlConstants.METADATA_URL, id);
+		
+	}
+	
+	public static String modifyUrl(String url, Map<String, String[]> queryParam){
+		try{
+			for(String key: queryParam.keySet()){
+				if( !(key.equalsIgnoreCase("filter") || key.equalsIgnoreCase("name") || key.equalsIgnoreCase("term")) )
+					url += "&" + key + "=" + URLEncoder.encode(queryParam.get(key)[0], "UTF-8");
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return url;
 	}
 	
 	public static void uploadMetaData(String targetUrl, String xml){
 		HttpURLConnection connection = null;
 		try{
 			URL url = new URL(targetUrl);
-			Map<String, String> headers = getUploadMetaHeaders();
+			Map<String, String> headers = new HeaderBuilder().authorization().connectionKeepAlive().contentTypeVndXml().acceptVndXml().build();
 			connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("PUT");
 			for(String key: headers.keySet())
@@ -69,7 +150,7 @@ public class Request {
 		}
 	}
 	
-	public static String excutePost(String targetURL, Map<String, String> headers) {
+	public static String excuteGet(String targetURL, Map<String, String> headers) {
 		  HttpURLConnection connection = null;  
 		  try {
 		    //Create connection
@@ -92,12 +173,12 @@ public class Request {
 		    rd.close();
 		    return response.toString();
 		  } catch (Exception e) {
-		    e.printStackTrace();
-		    return null;
+			  	e.printStackTrace();
+		    	return null;
 		  } finally {
-		    if(connection != null) {
-		      connection.disconnect(); 
-		    }
+			    if(connection != null) {
+			      connection.disconnect(); 
+			    }
 		  }
 	}
 

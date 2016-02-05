@@ -26,6 +26,7 @@ public class JsonView implements View {
             response.setContentType("application/json");
             response.setHeader("Access-Control-Allow-Origin", "*");
             response.setHeader("Access-Control-Allow-Headers", "*");
+            //response.setCharacterEncoding("utf-8");
             response.getWriter().print(jsonParam);               
     }
 

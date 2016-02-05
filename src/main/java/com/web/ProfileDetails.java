@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.json.JSONObject;
 import org.json.XML;
 
 import com.bazaarvoice.jolt.Chainr;
@@ -17,19 +16,17 @@ import com.mvc.View;
 import com.util.Request;
 import com.web.utils.HeaderBuilder;
 
-public class EditMetadata extends Controller {
+public class ProfileDetails extends Controller {
 
 	
 	@Override
 	public View get(HttpServletRequest request, PathParser pathInfo) throws Exception {
-		// TODO Auto-generated method stub
-		String term = request.getParameter("term");
-		String url = Request.prepareMetaSchemaUrl(term);
-		String body = Request.excuteGet(url, new HeaderBuilder().authorization().acceptAll().build());
 		
-		JSONObject xmlJSONObj = XML.toJSONObject(body);
-		String jsonPrettyPrintString = xmlJSONObj.toString();
-		return new JsonView(jsonPrettyPrintString);
+		String data = Request.excuteGet(UrlConstants.PROFILE_DETAIL, new HeaderBuilder().authorization().acceptJson().build());
+		List chainrSpecJSON = JsonUtils.classpathToList( "/json/sample/profileSpec.json" );
+        Chainr chainr = Chainr.fromSpec( chainrSpecJSON );
+        Object transformedOutput = chainr.transform( JsonUtils.jsonToObject(data) );
+		return new JsonView(transformedOutput);
 	}
 	
 	
