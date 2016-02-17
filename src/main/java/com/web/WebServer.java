@@ -2,6 +2,7 @@ package com.web;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.sql.SQLException;
 
 import org.eclipse.jetty.server.LocalConnector;
@@ -33,8 +34,13 @@ public class WebServer {
 	    server.add("/a4/A4Studio/uploadMeta", new UploadMeta());
 	    server.add("/a4/A4Studio/search/searchSuggestionFilters", new SearchFilter());
 	    server.add("/a4/A4Studio/profileDetails", new ProfileDetails());
+	    server.add("/a4/A4Studio/search/suggestionDetails", new SuggestionDetail());
+	    server.add("/a4/A4Studio/login", new Login());
 	    //http://mgr.vizrt.it/api/asset/item/2101510200000003621/metadata?krrr=0.841651865048334 - update metadata
         System.out.println("Init completed.");
+    	System.out.println("Default Charset=" + Charset.defaultCharset());
+    	System.out.println("file.encoding=" + System.getProperty("file.encoding"));
+
     }
 
 	/**

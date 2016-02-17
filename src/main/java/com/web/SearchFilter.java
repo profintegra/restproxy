@@ -49,21 +49,21 @@ public class SearchFilter extends Controller {
 		String searchItem = URLEncoder.encode(clear, "UTF-8").replaceAll("\\+", "%20");
 
 		url = Request.prepareSearchUrl(searchItem, term);//String.format(UrlConstants.FACETS_SEARCH, searchItem);
-		String data = Request.excuteGet(Request.modifyUrl(url, request.getParameterMap()), new HeaderBuilder().authorization().acceptAll().build());		
+		String data = Request.excuteGet(Request.modifyUrl(url, request.getParameterMap()), new HeaderBuilder().authorization(request.getHeader("Coockie")).acceptAll().build());		
 		List chainrSpecJSON = JsonUtils.classpathToList( "/json/sample/filterSpec.json" );
         Chainr chainr = Chainr.fromSpec( chainrSpecJSON );
         JSONArray arr = XML.toJSONObject(data).optJSONObject("atom:feed").optJSONArray("search:facets");
         Object transformedOutput;
         if(arr == null){
-        	transformedOutput = requestByAcceptJson(url, request.getParameterMap());   
+        	transformedOutput = requestByAcceptJson(url, request.getParameterMap(), request.getHeader("Coockie"));   
         }else
         	transformedOutput = chainr.transform( JsonUtils.jsonToObject(XML.toJSONObject(data).toString(1)) );
 
 		return new JsonView(transformedOutput);
 	}
 	
-	private Object requestByAcceptJson(String url, Map<String, String[]> queryParam){
-		String data = Request.excuteGet(Request.modifyUrl(url, queryParam), new HeaderBuilder().authorization().acceptAll().build());
+	private Object requestByAcceptJson(String url, Map<String, String[]> queryParam, String token){
+		String data = Request.excuteGet(Request.modifyUrl(url, queryParam), new HeaderBuilder().authorization(token).acceptAll().build());
 		List chainrSpecJSON = JsonUtils.classpathToList( "/json/sample/jsonFilterSpec.json" );
         Chainr chainr = Chainr.fromSpec( chainrSpecJSON );
         String pretty = XML.toJSONObject(data).toString(1);

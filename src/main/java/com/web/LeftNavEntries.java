@@ -20,9 +20,11 @@ public class LeftNavEntries extends Controller {
 		
 		NavBar search = new NavBar(0, "Search", "ti-search", "root.search");
 		NavBar task = new NavBar(1, "Task2", "ti-menu-alt", "root.tasks");
+		NavBar logout = new NavBar(2, "Logout", "fa fa-level-up", "logout");
 		List<NavBar> list = new ArrayList();
 		list.add(search);
 		list.add(task);
+		list.add(logout);
 		Map<String, List> navbars = new HashMap<String, List>();
 		navbars.put("leftNavEntry", list);
 		

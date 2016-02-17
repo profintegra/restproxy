@@ -55,7 +55,7 @@ public class UploadMeta extends Controller {
 			url = String.format(url, id);
 			xml = xml.replaceFirst("<payload>", "<payload xmlns=\""+request.getParameter("xmlns")+"\" model=\""+Request.prepareMetaSchemaUrl(term)+"\">");
 			 
-			Request.uploadMetaData(url, xml);
+			Request.uploadMetaData(url, xml, request.getHeader("Coockie"));
 			return new XmlView(xml);
 		}		
 		

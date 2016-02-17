@@ -22,7 +22,7 @@ public class ProfileDetails extends Controller {
 	@Override
 	public View get(HttpServletRequest request, PathParser pathInfo) throws Exception {
 		
-		String data = Request.excuteGet(UrlConstants.PROFILE_DETAIL, new HeaderBuilder().authorization().acceptJson().build());
+		String data = Request.excuteGet(UrlConstants.PROFILE_DETAIL, new HeaderBuilder().authorization(request.getHeader("Coockie")).acceptJson().build());
 		List chainrSpecJSON = JsonUtils.classpathToList( "/json/sample/profileSpec.json" );
         Chainr chainr = Chainr.fromSpec( chainrSpecJSON );
         Object transformedOutput = chainr.transform( JsonUtils.jsonToObject(data) );

@@ -2,12 +2,15 @@ package com.util;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,6 +53,8 @@ public class Request {
 				return String.format(url, term);
 			else
 				return String.format(url + "&search.default=%s", term, searched);
+		}else if(StringUtils.isNotBlank(searched)){
+			return String.format(UrlConstants.EMPTY_SEARCH + "&search.default=%s", searched);
 		}
 		
 		return String.format(UrlConstants.ENTITY_SEARCH, searched);
@@ -115,11 +120,11 @@ public class Request {
 		return url;
 	}
 	
-	public static void uploadMetaData(String targetUrl, String xml){
+	public static void uploadMetaData(String targetUrl, String xml, String token){
 		HttpURLConnection connection = null;
 		try{
 			URL url = new URL(targetUrl);
-			Map<String, String> headers = new HeaderBuilder().authorization().connectionKeepAlive().contentTypeVndXml().acceptVndXml().build();
+			Map<String, String> headers = new HeaderBuilder().authorization(token).connectionKeepAlive().contentTypeVndXml().acceptVndXml().build();
 			connection = (HttpURLConnection) url.openConnection();
 			connection.setRequestMethod("PUT");
 			for(String key: headers.keySet())
@@ -180,6 +185,34 @@ public class Request {
 			      connection.disconnect(); 
 			    }
 		  }
+	}
+	
+	public static int login(String targetURL, String params, Map<String, String> headers) {
+		  HttpURLConnection connection = null; 
+		  int statusCode = -1;
+		  try {
+		    //Create connection
+		    URL url = new URL(targetURL);
+		    byte[] postData = params.getBytes(StandardCharsets.UTF_8);
+		    connection = (HttpURLConnection)url.openConnection();
+		    connection.setRequestMethod("POST");
+		    for(String key: headers.keySet())
+		    	connection.setRequestProperty(key, headers.get(key));
+		    connection.setDoOutput(true);
+		    connection.connect();
+		    try( DataOutputStream wr = new DataOutputStream( connection.getOutputStream())) {
+		    	   wr.write( postData );
+		    	}
+		   statusCode = connection.getResponseCode();
+		  }catch(Exception e){			  
+			  e.printStackTrace();
+		  } finally {
+			    if(connection != null) {
+			      connection.disconnect(); 
+			    }
+			    
+		  }
+		  return statusCode;
 	}
 
 }

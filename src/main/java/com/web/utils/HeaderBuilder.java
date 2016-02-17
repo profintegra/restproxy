@@ -42,8 +42,8 @@ public class HeaderBuilder {
 		return this;
 	}
 	
-	public HeaderBuilder authorization(){
-		this.headers.put("Authorization", "Basic dXVzZXI6SW5tZWRpYQ==");
+	public HeaderBuilder authorization(String token){
+		this.headers.put("Authorization", token);//"Basic dXVzZXI6SW5tZWRpYQ==");
 		return this;
 	}
 	

@@ -31,7 +31,7 @@ public class EntryMetadata extends Controller {
 		if(StringUtils.isNotBlank(id)){
 			
 			final int PRETTY_PRINT_INDENT_FACTOR = 4;
-			String body = Request.excuteGet(String.format(url, id), new HeaderBuilder().authorization().acceptAll().build());
+			String body = Request.excuteGet(String.format(url, id), new HeaderBuilder().authorization(request.getHeader("Coockie")).acceptAll().build());
 			
 			JSONObject xmlJSONObj = XML.toJSONObject(body);
 			

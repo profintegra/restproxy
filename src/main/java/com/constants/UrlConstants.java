@@ -4,6 +4,9 @@ public final class UrlConstants {
 	
 	public static final String HOST = "http://mgr.vizrt.it";
 	
+	public static final String LOGIN_URL = HOST + "/api/access/session";
+	public static final String LOGIN_PARAMS = "User=%s&Passwd=%s";
+	
 	public static final String ITEM_META_SCHEMA_URL = HOST + "/api/metadata/form/hubitem/r1";
 	public static final String SERIES_META_SCHEMA_URL = HOST + "/api/metadata/form/series/r1";
 	public static final String PROGRAM_META_SCHEMA_URL = HOST + "/api/metadata/form/program/r1";

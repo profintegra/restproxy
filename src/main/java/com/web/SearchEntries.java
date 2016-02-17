@@ -36,13 +36,13 @@ public class SearchEntries extends Controller {
 		String term = request.getParameter("term");
 		if(StringUtils.isBlank(term)) term = "item-default";
 		String url = String.format(UrlConstants.AUTOCOMPLETE_OFFER_URL, searchItem, term);
-		Object entry = getEntry(url);
+		Object entry = getEntry(url, request.getHeader("Coockie"));
 		
 		return new JsonView(entry);
 	}
 	
-	private Object getEntry(String url){
-		String data = Request.excuteGet(url, new HeaderBuilder().authorization().acceptJson().build());
+	private Object getEntry(String url, String token){
+		String data = Request.excuteGet(url, new HeaderBuilder().authorization(token).acceptJson().build());
 		List chainrSpecJSON = JsonUtils.classpathToList( "/json/sample/spec.json" );
         Chainr chainr = Chainr.fromSpec( chainrSpecJSON );
         return chainr.transform( JsonUtils.jsonToObject(data) );
