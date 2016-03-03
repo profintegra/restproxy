@@ -14,6 +14,7 @@ import com.mvc.JsonView;
 import com.mvc.TextView;
 import com.mvc.View;
 import com.util.Request;
+import com.web.utils.HeaderBuilder;
 
 public class Login extends Controller {
 	
@@ -28,8 +29,8 @@ public class Login extends Controller {
 		if(StringUtils.isNotBlank(login) && StringUtils.isNotBlank(password)){
 			
 			String params = String.format(UrlConstants.LOGIN_PARAMS, login, password);
-			if(Request.login(UrlConstants.LOGIN_URL, params, Collections.EMPTY_MAP) == 200)
-				return new TextView();
+			String response = Request.login(UrlConstants.LOGIN_URL, params, new HeaderBuilder().contentTypeUrlEncoded().acceptAll().build());
+			return new JsonView(response+"=url="+UrlConstants.HOST);
 			
 		}
 		

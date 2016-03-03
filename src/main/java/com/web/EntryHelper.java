@@ -11,6 +11,7 @@ import org.json.XML;
 import com.bazaarvoice.jolt.Chainr;
 import com.bazaarvoice.jolt.JsonUtils;
 import com.constants.UrlConstants;
+import com.fasterxml.jackson.databind.deser.impl.ExternalTypeHandler.Builder;
 import com.mvc.Controller;
 import com.mvc.JsonView;
 import com.mvc.PathParser;
@@ -18,32 +19,27 @@ import com.mvc.View;
 import com.util.Request;
 import com.web.utils.HeaderBuilder;
 
-public class EntryMetadata extends Controller {
-	
+public class EntryHelper extends Controller{
 	
 	@Override
 	public View get(HttpServletRequest request, PathParser pathInfo) throws Exception {
+		// TODO Auto-generated method stub
 		
 		String id = request.getParameter("id");
-		String term = request.getParameter("term");
-		String url = Request.prepareMetaUrl(id, term);
 		
 		if(StringUtils.isNotBlank(id)){
-			
-			final int PRETTY_PRINT_INDENT_FACTOR = 4;
-			String body = Request.excuteGet(String.format(url, id), new HeaderBuilder().authorization(request.getHeader(UrlConstants.AUTH_HEADER)).acceptAll().build());
-			
+			String url = String.format(UrlConstants.ITEM_HELPER_METADATA_URL, id);
+			String body = Request.excuteGet(url, new HeaderBuilder().authorization(request.getHeader(UrlConstants.AUTH_HEADER)).acceptAll().build());
 			JSONObject xmlJSONObj = XML.toJSONObject(body);
-			
-			String jsonPrettyPrintString = xmlJSONObj.toString();
-			List chainrSpecJSON = JsonUtils.classpathToList( "/json/sample/metadataSpec.json" );
+			String prettyJson = xmlJSONObj.toString(1);
+			List chainrSpecJSON = JsonUtils.classpathToList( "/json/sample/entryHelperSpec.json" );
 	        Chainr chainr = Chainr.fromSpec( chainrSpecJSON );
-	        Object transformedOutput = chainr.transform( JsonUtils.jsonToObject(jsonPrettyPrintString) );
+	        Object transformedOutput = chainr.transform( JsonUtils.jsonToObject(prettyJson) );
 			return new JsonView(transformedOutput);
-		}			
-		return new JsonView(null);
+		}
 			
 		
+		return new JsonView(null);
 	}
 
 }

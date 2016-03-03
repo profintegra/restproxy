@@ -1,0 +1,18 @@
+[
+	{
+		"operation": "shift",
+		"spec": {
+			"atom:entry": {
+				"atom:link": "search/suggestions/entryHelper.links"
+			}
+		}
+	},
+	{
+		"operation": "default",
+		"spec": {
+			"search/suggestions/entryHelper": {
+				"id": 0
+			}
+		}
+	}
+]

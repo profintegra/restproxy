@@ -43,7 +43,12 @@ public class HeaderBuilder {
 	}
 	
 	public HeaderBuilder authorization(String token){
-		this.headers.put("Authorization", token);//"Basic dXVzZXI6SW5tZWRpYQ==");
+		this.headers.put("Cookie", "token="+token);//"Basic dXVzZXI6SW5tZWRpYQ==");Authorization
+		return this;
+	}
+	
+	public HeaderBuilder contentTypeUrlEncoded(){
+		this.headers.put("Content-Type", "application/x-www-form-urlencoded");
 		return this;
 	}
 	

@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
+import java.net.URLDecoder;
+import java.util.Base64.Decoder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.stream.XMLEventReader;
@@ -51,11 +53,11 @@ public class UploadMeta extends Controller {
 			String id = request.getParameter("id");
 			String term = request.getParameter("term");
 			String url = Request.prepareMetaUrl(id, term);	
-
+			xml = URLDecoder.decode(xml, "UTF-8");
 			url = String.format(url, id);
 			xml = xml.replaceFirst("<payload>", "<payload xmlns=\""+request.getParameter("xmlns")+"\" model=\""+Request.prepareMetaSchemaUrl(term)+"\">");
 			 
-			Request.uploadMetaData(url, xml, request.getHeader("Coockie"));
+			Request.uploadMetaData(url, xml, request.getHeader(UrlConstants.AUTH_HEADER));
 			return new XmlView(xml);
 		}		
 		

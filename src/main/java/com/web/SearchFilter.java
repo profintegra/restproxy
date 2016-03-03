@@ -49,13 +49,13 @@ public class SearchFilter extends Controller {
 		String searchItem = URLEncoder.encode(clear, "UTF-8").replaceAll("\\+", "%20");
 
 		url = Request.prepareSearchUrl(searchItem, term);//String.format(UrlConstants.FACETS_SEARCH, searchItem);
-		String data = Request.excuteGet(Request.modifyUrl(url, request.getParameterMap()), new HeaderBuilder().authorization(request.getHeader("Coockie")).acceptAll().build());		
+		String data = Request.excuteGet(Request.modifyUrl(url, request.getParameterMap()), new HeaderBuilder().authorization(request.getHeader(UrlConstants.AUTH_HEADER)).acceptAll().build());		
 		List chainrSpecJSON = JsonUtils.classpathToList( "/json/sample/filterSpec.json" );
         Chainr chainr = Chainr.fromSpec( chainrSpecJSON );
         JSONArray arr = XML.toJSONObject(data).optJSONObject("atom:feed").optJSONArray("search:facets");
         Object transformedOutput;
         if(arr == null){
-        	transformedOutput = requestByAcceptJson(url, request.getParameterMap(), request.getHeader("Coockie"));   
+        	transformedOutput = requestByAcceptJson(url, request.getParameterMap(), request.getHeader(UrlConstants.AUTH_HEADER));   
         }else
         	transformedOutput = chainr.transform( JsonUtils.jsonToObject(XML.toJSONObject(data).toString(1)) );
 

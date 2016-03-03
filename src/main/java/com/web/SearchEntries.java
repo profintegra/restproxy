@@ -36,7 +36,7 @@ public class SearchEntries extends Controller {
 		String term = request.getParameter("term");
 		if(StringUtils.isBlank(term)) term = "item-default";
 		String url = String.format(UrlConstants.AUTOCOMPLETE_OFFER_URL, searchItem, term);
-		Object entry = getEntry(url, request.getHeader("Coockie"));
+		Object entry = getEntry(url, request.getHeader(UrlConstants.AUTH_HEADER));
 		
 		return new JsonView(entry);
 	}

@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.bazaarvoice.jolt.Chainr;
 import com.bazaarvoice.jolt.JsonUtils;
+import com.constants.UrlConstants;
 import com.mvc.Controller;
 import com.mvc.JsonView;
 import com.mvc.PathParser;
@@ -25,7 +26,7 @@ public class SuggestionDetail extends Controller {
 		String term = request.getParameter("term");
 
 		url = Request.prepareSearchUrl(searchItem, term);
-		String data = Request.excuteGet(Request.modifyUrl(url, request.getParameterMap()), new HeaderBuilder().authorization(request.getHeader("Coockie")).acceptJson().build());
+		String data = Request.excuteGet(Request.modifyUrl(url, request.getParameterMap()), new HeaderBuilder().authorization(request.getHeader(UrlConstants.AUTH_HEADER)).acceptJson().build());
 		List chainrSpecJSON = JsonUtils.classpathToList( "/json/sample/searchDetailSpec.json" );
         Chainr chainr = Chainr.fromSpec( chainrSpecJSON );
         Object transformedOutput = chainr.transform( JsonUtils.jsonToObject(data) );

@@ -35,7 +35,7 @@ public class SearchSuggestions extends Controller {
 		String term = request.getParameter("term");
 
 		url = Request.prepareSearchUrl(searchItem, term);
-		String data = Request.excuteGet(Request.modifyUrl(url, request.getParameterMap()), new HeaderBuilder().authorization(request.getHeader("Coockie")).acceptJson().build());
+		String data = Request.excuteGet(Request.modifyUrl(url, request.getParameterMap()), new HeaderBuilder().authorization(request.getHeader(UrlConstants.AUTH_HEADER)).acceptJson().build());
 		List chainrSpecJSON = JsonUtils.classpathToList( "/json/sample/suggestionSpec.json" );
         Chainr chainr = Chainr.fromSpec( chainrSpecJSON );
         Object transformedOutput = chainr.transform( JsonUtils.jsonToObject(data) );

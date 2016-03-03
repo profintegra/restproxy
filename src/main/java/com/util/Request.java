@@ -3,6 +3,7 @@ package com.util;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -60,7 +61,7 @@ public class Request {
 		return String.format(UrlConstants.ENTITY_SEARCH, searched);
 		
 	}
-	
+	 
 	public static String prepareMetaSchemaUrl(String term){
 
 		if(StringUtils.isNotBlank(term)){
@@ -175,6 +176,7 @@ public class Request {
 		      response.append(line);
 		      response.append('\r');
 		    }
+		    System.out.println(connection.getHeaderFields());
 		    rd.close();
 		    return response.toString();
 		  } catch (Exception e) {
@@ -187,7 +189,7 @@ public class Request {
 		  }
 	}
 	
-	public static int login(String targetURL, String params, Map<String, String> headers) {
+	public static String login(String targetURL, String params, Map<String, String> headers) throws IOException {
 		  HttpURLConnection connection = null; 
 		  int statusCode = -1;
 		  try {
@@ -203,7 +205,18 @@ public class Request {
 		    try( DataOutputStream wr = new DataOutputStream( connection.getOutputStream())) {
 		    	   wr.write( postData );
 		    	}
-		   statusCode = connection.getResponseCode();
+		    java.io.InputStream is = connection.getInputStream();
+		    BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+		    StringBuilder response = new StringBuilder(); // or StringBuffer if not Java 5+ 
+		    String line;
+		    while((line = rd.readLine()) != null) {
+		      response.append(line);
+		      response.append('\r');
+		    }
+		    rd.close();
+		    System.out.println(connection.getHeaderFields());
+		    return response.toString();
+		   
 		  }catch(Exception e){			  
 			  e.printStackTrace();
 		  } finally {
@@ -212,7 +225,7 @@ public class Request {
 			    }
 			    
 		  }
-		  return statusCode;
+		  return String.valueOf(connection.getResponseCode());
 	}
 
 }

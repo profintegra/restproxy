@@ -26,7 +26,7 @@ public class EditMetadata extends Controller {
 		String term = request.getParameter("term");
 		
 		String url = Request.prepareMetaSchemaUrl(term);
-		String body = Request.excuteGet(url, new HeaderBuilder().authorization(request.getHeader("Coockie")).acceptAll().build());
+		String body = Request.excuteGet(url, new HeaderBuilder().authorization(request.getHeader(UrlConstants.AUTH_HEADER)).acceptAll().build());
 		
 		JSONObject xmlJSONObj = XML.toJSONObject(body);
 		String jsonPrettyPrintString = xmlJSONObj.toString();

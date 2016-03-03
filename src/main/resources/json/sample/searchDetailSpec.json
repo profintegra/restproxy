@@ -3,19 +3,19 @@
 		"operation": "shift",
 		"spec": {
 			"data": {
-				"feedTotalResults": "search/suggestionDetail[#2].totalResult",
-				"feedItemsPerPage": "search/suggestionDetail[#2].itemPerPage",
-				"feedStartIndex": "search/suggestionDetail[#2].startIndex"
+				"feedTotalResults": "search/suggestionDetail.totalResult",
+				"feedItemsPerPage": "search/suggestionDetail.itemPerPage",
+				"feedStartIndex": "search/suggestionDetail.startIndex"
 			}
 		}
 	},
 	{
 		"operation": "default",
 		"spec": {
-			"search/suggestionDetail[]": {
-				"*": {
+			"search/suggestionDetail": {
+				
 					"id": 0
-				}
+				
 			}
 		}
 	}
