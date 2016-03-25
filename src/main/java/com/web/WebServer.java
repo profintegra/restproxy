@@ -38,6 +38,7 @@ public class WebServer {
 	    server.add("/a4/A4Studio/login", new Login());
 	    server.add("/a4/A4Studio/search/suggestions/entryHelpers", new EntryHelper());//search/suggestions/entryHelpers?id=2101510220000003721.
 	    server.add("/a4/A4Studio/search/suggestions/metadataForms", new MetadataForm());
+	    server.add("/a4/A4Studio/refactorSearchSuggestions", new RefactorSearchSuggestions());
 	    //http://mgr.vizrt.it/api/asset/item/2101510200000003621/metadata?krrr=0.841651865048334 - update metadata
         System.out.println("Init completed.");
     	System.out.println("Default Charset=" + Charset.defaultCharset());

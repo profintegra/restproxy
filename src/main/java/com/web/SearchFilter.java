@@ -32,6 +32,7 @@ import com.mvc.JsonView;
 import com.mvc.PathParser;
 import com.mvc.View;
 import com.util.Request;
+import com.web.model.Response;
 import com.web.utils.HeaderBuilder;
 
 import de.odysseus.staxon.json.JsonXMLConfig;
@@ -45,25 +46,26 @@ public class SearchFilter extends Controller {
 		String clear = request.getParameter("filter");		
 		String term = request.getParameter("term");
 		String url = "";
+		Object transformedOutput = null;
 		if(StringUtils.isBlank(clear)) clear = "test";
 		String searchItem = URLEncoder.encode(clear, "UTF-8").replaceAll("\\+", "%20");
-
+		Response responseDetail = new Response();
 		url = Request.prepareSearchUrl(searchItem, term);//String.format(UrlConstants.FACETS_SEARCH, searchItem);
-		String data = Request.excuteGet(Request.modifyUrl(url, request.getParameterMap()), new HeaderBuilder().authorization(request.getHeader(UrlConstants.AUTH_HEADER)).acceptAll().build());		
+		String data = Request.excuteGet(Request.modifyUrl(url, request.getParameterMap()), new HeaderBuilder().authorization(request.getHeader(UrlConstants.AUTH_HEADER)).acceptAll().build(), responseDetail);		
 		List chainrSpecJSON = JsonUtils.classpathToList( "/json/sample/filterSpec.json" );
         Chainr chainr = Chainr.fromSpec( chainrSpecJSON );
-        JSONArray arr = XML.toJSONObject(data).optJSONObject("atom:feed").optJSONArray("search:facets");
-        Object transformedOutput;
-        if(arr == null){
-        	transformedOutput = requestByAcceptJson(url, request.getParameterMap(), request.getHeader(UrlConstants.AUTH_HEADER));   
-        }else
-        	transformedOutput = chainr.transform( JsonUtils.jsonToObject(XML.toJSONObject(data).toString(1)) );
-
-		return new JsonView(transformedOutput);
+        if(StringUtils.isNotBlank(data)){
+	        JSONArray arr = XML.toJSONObject(data).optJSONObject("atom:feed").optJSONArray("search:facets");	        
+	        if(arr == null){
+	        	transformedOutput = requestByAcceptJson(url, request.getParameterMap(), request.getHeader(UrlConstants.AUTH_HEADER), responseDetail);   
+	        }else
+	        	transformedOutput = chainr.transform( JsonUtils.jsonToObject(XML.toJSONObject(data).toString(1)) );
+        }
+		return new JsonView(transformedOutput, responseDetail);
 	}
 	
-	private Object requestByAcceptJson(String url, Map<String, String[]> queryParam, String token){
-		String data = Request.excuteGet(Request.modifyUrl(url, queryParam), new HeaderBuilder().authorization(token).acceptAll().build());
+	private Object requestByAcceptJson(String url, Map<String, String[]> queryParam, String token, Response responseDetail){
+		String data = Request.excuteGet(Request.modifyUrl(url, queryParam), new HeaderBuilder().authorization(token).acceptAll().build(), responseDetail);
 		List chainrSpecJSON = JsonUtils.classpathToList( "/json/sample/jsonFilterSpec.json" );
         Chainr chainr = Chainr.fromSpec( chainrSpecJSON );
         String pretty = XML.toJSONObject(data).toString(1);

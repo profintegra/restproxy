@@ -36,6 +36,7 @@ import com.mvc.PathParser;
 import com.mvc.View;
 import com.mvc.XmlView;
 import com.util.Request;
+import com.web.model.Response;
 
 import de.odysseus.staxon.json.JsonXMLConfig;
 import de.odysseus.staxon.json.JsonXMLConfigBuilder;
@@ -61,7 +62,7 @@ public class UploadMeta extends Controller {
 			return new XmlView(xml);
 		}		
 		
-		return new JsonView("");
+		return new JsonView("", new Response());
 		
 		
 	}

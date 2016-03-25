@@ -17,6 +17,7 @@ import com.mvc.JsonView;
 import com.mvc.PathParser;
 import com.mvc.View;
 import com.util.Request;
+import com.web.model.Response;
 import com.web.utils.HeaderBuilder;
 
 public class EntryHelper extends Controller{
@@ -26,20 +27,20 @@ public class EntryHelper extends Controller{
 		// TODO Auto-generated method stub
 		
 		String id = request.getParameter("id");
-		
+		Response responseDetail = new Response();
 		if(StringUtils.isNotBlank(id)){
-			String url = String.format(UrlConstants.ITEM_HELPER_METADATA_URL, id);
-			String body = Request.excuteGet(url, new HeaderBuilder().authorization(request.getHeader(UrlConstants.AUTH_HEADER)).acceptAll().build());
+			String url = String.format(UrlConstants.ITEM_HELPER_METADATA_URL, id);			
+			String body = Request.excuteGet(url, new HeaderBuilder().authorization(request.getHeader(UrlConstants.AUTH_HEADER)).acceptAll().build(), responseDetail);
 			JSONObject xmlJSONObj = XML.toJSONObject(body);
 			String prettyJson = xmlJSONObj.toString(1);
 			List chainrSpecJSON = JsonUtils.classpathToList( "/json/sample/entryHelperSpec.json" );
 	        Chainr chainr = Chainr.fromSpec( chainrSpecJSON );
 	        Object transformedOutput = chainr.transform( JsonUtils.jsonToObject(prettyJson) );
-			return new JsonView(transformedOutput);
+			return new JsonView(transformedOutput, responseDetail);
 		}
 			
 		
-		return new JsonView(null);
+		return new JsonView(null, responseDetail);
 	}
 
 }

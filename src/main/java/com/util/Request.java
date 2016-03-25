@@ -19,6 +19,7 @@ import org.apache.commons.lang.StringUtils;
 import org.omg.CORBA.portable.InputStream;
 
 import com.constants.UrlConstants;
+import com.web.model.Response;
 import com.web.utils.HeaderBuilder;
 
 public class Request {
@@ -156,7 +157,7 @@ public class Request {
 		}
 	}
 	
-	public static String excuteGet(String targetURL, Map<String, String> headers) {
+	public static String excuteGet(String targetURL, Map<String, String> headers, Response responseDetail) {
 		  HttpURLConnection connection = null;  
 		  try {
 		    //Create connection
@@ -176,20 +177,28 @@ public class Request {
 		      response.append(line);
 		      response.append('\r');
 		    }
-		    System.out.println(connection.getHeaderFields());
+		    responseDetail.setToken(correctToken(connection.getHeaderFields().get("Set-Cookie").get(0)));
+		    //responseDetail.setResponseCode(connection.getResponseCode());
 		    rd.close();
 		    return response.toString();
 		  } catch (Exception e) {
 			  	e.printStackTrace();
+
 		    	return null;
 		  } finally {
+				  try {
+					responseDetail.setResponseCode(connection.getResponseCode());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			    if(connection != null) {
 			      connection.disconnect(); 
 			    }
 		  }
 	}
 	
-	public static String login(String targetURL, String params, Map<String, String> headers) throws IOException {
+	public static String login(String targetURL, String params, Map<String, String> headers, Response responseDetail) throws IOException {
 		  HttpURLConnection connection = null; 
 		  int statusCode = -1;
 		  try {
@@ -214,18 +223,26 @@ public class Request {
 		      response.append('\r');
 		    }
 		    rd.close();
-		    System.out.println(connection.getHeaderFields());
+		    //responseDetail.setResponseCode(connection.getResponseCode());
 		    return response.toString();
 		   
 		  }catch(Exception e){			  
 			  e.printStackTrace();
+			  
 		  } finally {
+			  responseDetail.setResponseCode(connection.getResponseCode());
 			    if(connection != null) {
 			      connection.disconnect(); 
 			    }
 			    
 		  }
 		  return String.valueOf(connection.getResponseCode());
+	}
+	
+	private static String correctToken(String dirtyValue){
+		int firstDivider = '=';
+		int lastDivider = ';';
+		return dirtyValue.substring(dirtyValue.indexOf(firstDivider) + 1, dirtyValue.indexOf(lastDivider)).trim();
 	}
 
 }

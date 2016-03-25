@@ -15,6 +15,7 @@ import com.mvc.JsonView;
 import com.mvc.PathParser;
 import com.mvc.View;
 import com.util.Request;
+import com.web.model.Response;
 import com.web.utils.HeaderBuilder;
 
 public class EditMetadata extends Controller {
@@ -24,13 +25,13 @@ public class EditMetadata extends Controller {
 	public View get(HttpServletRequest request, PathParser pathInfo) throws Exception {
 		// TODO Auto-generated method stub
 		String term = request.getParameter("term");
-		
+		Response responseDetail = new Response();
 		String url = Request.prepareMetaSchemaUrl(term);
-		String body = Request.excuteGet(url, new HeaderBuilder().authorization(request.getHeader(UrlConstants.AUTH_HEADER)).acceptAll().build());
+		String body = Request.excuteGet(url, new HeaderBuilder().authorization(request.getHeader(UrlConstants.AUTH_HEADER)).acceptAll().build(), responseDetail);
 		
 		JSONObject xmlJSONObj = XML.toJSONObject(body);
 		String jsonPrettyPrintString = xmlJSONObj.toString();
-		return new JsonView(jsonPrettyPrintString);
+		return new JsonView(jsonPrettyPrintString, responseDetail);
 	}
 	
 	

@@ -21,6 +21,7 @@ import com.mvc.JsonView;
 import com.mvc.PathParser;
 import com.mvc.View;
 import com.util.Request;
+import com.web.model.Response;
 import com.web.utils.HeaderBuilder;
 
 public class SearchSuggestions extends Controller {
@@ -33,12 +34,12 @@ public class SearchSuggestions extends Controller {
 		String url = "";
 		String searchItem = URLEncoder.encode(request.getParameter("name"), "UTF-8").replaceAll("\\+", "%20");
 		String term = request.getParameter("term");
-
+		Response responseDetail = new Response();
 		url = Request.prepareSearchUrl(searchItem, term);
-		String data = Request.excuteGet(Request.modifyUrl(url, request.getParameterMap()), new HeaderBuilder().authorization(request.getHeader(UrlConstants.AUTH_HEADER)).acceptJson().build());
+		String data = Request.excuteGet(Request.modifyUrl(url, request.getParameterMap()), new HeaderBuilder().authorization(request.getHeader(UrlConstants.AUTH_HEADER)).acceptJson().build(), responseDetail);
 		List chainrSpecJSON = JsonUtils.classpathToList( "/json/sample/suggestionSpec.json" );
         Chainr chainr = Chainr.fromSpec( chainrSpecJSON );
         Object transformedOutput = chainr.transform( JsonUtils.jsonToObject(data) );
-		return new JsonView(transformedOutput);
+		return new JsonView(transformedOutput, responseDetail);
 	}
 }

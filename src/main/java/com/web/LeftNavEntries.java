@@ -11,6 +11,7 @@ import com.mvc.Controller;
 import com.mvc.JsonView;
 import com.mvc.PathParser;
 import com.mvc.View;
+import com.web.model.Response;
 
 public class LeftNavEntries extends Controller {
 	
@@ -28,7 +29,7 @@ public class LeftNavEntries extends Controller {
 		Map<String, List> navbars = new HashMap<String, List>();
 		navbars.put("leftNavEntry", list);
 		
-		return new JsonView(navbars);
+		return new JsonView(navbars, new Response());
 	}
 	
 	

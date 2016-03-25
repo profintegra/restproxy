@@ -16,6 +16,7 @@ import com.mvc.JsonView;
 import com.mvc.PathParser;
 import com.mvc.View;
 import com.util.Request;
+import com.web.model.Response;
 import com.web.utils.HeaderBuilder;
 
 public class EntryMetadata extends Controller {
@@ -27,11 +28,11 @@ public class EntryMetadata extends Controller {
 		String id = request.getParameter("id");
 		String term = request.getParameter("term");
 		String url = Request.prepareMetaUrl(id, term);
-		
+		Response responseDetail = new Response();
 		if(StringUtils.isNotBlank(id)){
 			
 			final int PRETTY_PRINT_INDENT_FACTOR = 4;
-			String body = Request.excuteGet(String.format(url, id), new HeaderBuilder().authorization(request.getHeader(UrlConstants.AUTH_HEADER)).acceptAll().build());
+			String body = Request.excuteGet(String.format(url, id), new HeaderBuilder().authorization(request.getHeader(UrlConstants.AUTH_HEADER)).acceptAll().build(), responseDetail);
 			
 			JSONObject xmlJSONObj = XML.toJSONObject(body);
 			
@@ -39,9 +40,9 @@ public class EntryMetadata extends Controller {
 			List chainrSpecJSON = JsonUtils.classpathToList( "/json/sample/metadataSpec.json" );
 	        Chainr chainr = Chainr.fromSpec( chainrSpecJSON );
 	        Object transformedOutput = chainr.transform( JsonUtils.jsonToObject(jsonPrettyPrintString) );
-			return new JsonView(transformedOutput);
+			return new JsonView(transformedOutput, responseDetail);
 		}			
-		return new JsonView(null);
+		return new JsonView(null, responseDetail);
 			
 		
 	}
