@@ -28,18 +28,17 @@ public class WebServer {
 
 	    server.add("/a4/A4Studio/leftNavEntries", new LeftNavEntries());
 	    server.add("/a4/A4Studio/searchEntries", new SearchEntries());
-	    server.add("/a4/A4Studio/search/searchSuggestions", new SearchSuggestions());
 	    server.add("/a4/A4Studio/search/suggestions/searchMetaItems", new EntryMetadata());
 	    server.add("/a4/A4Studio/editedMetaList", new EditMetadata());
 	    server.add("/a4/A4Studio/uploadMeta", new UploadMeta());
 	    server.add("/a4/A4Studio/search/searchSuggestionFilters", new SearchFilter());
 	    server.add("/a4/A4Studio/profileDetails", new ProfileDetails());
-	    server.add("/a4/A4Studio/search/suggestionDetails", new SuggestionDetail());
+	    //server.add("/a4/A4Studio/search/suggestionDetails", new SuggestionDetail());
 	    server.add("/a4/A4Studio/login", new Login());
 	    server.add("/a4/A4Studio/search/suggestions/entryHelpers", new EntryHelper());//search/suggestions/entryHelpers?id=2101510220000003721.
 	    server.add("/a4/A4Studio/search/suggestions/metadataForms", new MetadataForm());
-	    server.add("/a4/A4Studio/refactorSearchSuggestions", new RefactorSearchSuggestions());
-	    //http://mgr.vizrt.it/api/asset/item/2101510200000003621/metadata?krrr=0.841651865048334 - update metadata
+	    server.add("/a4/A4Studio/searchSuggestions", new SearchSuggestions());
+	    server.add("/a4/A4Studio/commonConnectors", new CommonConnector());
         System.out.println("Init completed.");
     	System.out.println("Default Charset=" + Charset.defaultCharset());
     	System.out.println("file.encoding=" + System.getProperty("file.encoding"));

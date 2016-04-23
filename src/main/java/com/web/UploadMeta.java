@@ -8,8 +8,6 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URLDecoder;
-import java.util.Base64.Decoder;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;

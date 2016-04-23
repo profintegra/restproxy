@@ -5,8 +5,8 @@
 			"data": {
 				"autocompletion": {
 					"*": {
-						"@": "refactorSearchSuggestions[&].name",
-						"$": "refactorSearchSuggestions[&].id"
+						"@": "searchSuggestion[&].name",
+						"$": "searchSuggestion[&].id"
 					}
 				}
 			}

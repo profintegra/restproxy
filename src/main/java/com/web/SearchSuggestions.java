@@ -1,17 +1,10 @@
 package com.web;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.jetty.util.StringUtil;
 
 import com.bazaarvoice.jolt.Chainr;
 import com.bazaarvoice.jolt.JsonUtils;
@@ -30,16 +23,23 @@ public class SearchSuggestions extends Controller {
 	@Override
 	public View get(HttpServletRequest request, PathParser pathInfo) throws Exception {
 		// TODO Auto-generated method stub
-		String clear = request.getParameter("name");
-		String url = "";
-		String searchItem = URLEncoder.encode(request.getParameter("name"), "UTF-8").replaceAll("\\+", "%20");
+		String searchItem = request.getParameter("name");
 		String term = request.getParameter("term");
 		Response responseDetail = new Response();
-		url = Request.prepareSearchUrl(searchItem, term);
-		String data = Request.excuteGet(Request.modifyUrl(url, request.getParameterMap()), new HeaderBuilder().authorization(request.getHeader(UrlConstants.AUTH_HEADER)).acceptJson().build(), responseDetail);
-		List chainrSpecJSON = JsonUtils.classpathToList( "/json/sample/suggestionSpec.json" );
-        Chainr chainr = Chainr.fromSpec( chainrSpecJSON );
-        Object transformedOutput = chainr.transform( JsonUtils.jsonToObject(data) );
-		return new JsonView(transformedOutput, responseDetail);
+		if(StringUtils.isBlank(term)) term = "item-default";
+		String url = String.format(UrlConstants.AUTOCOMPLETE_OFFER_URL, searchItem, term);
+		Object entry = getEntry(url, request.getHeader(UrlConstants.AUTH_HEADER), responseDetail);
+		return new JsonView(entry, responseDetail);
 	}
+	
+	private Object getEntry(String url, String token, Response responseDetail){
+		String data = Request.excuteGet(url, new HeaderBuilder().authorization(token).acceptJson().build(), responseDetail);
+		if(responseDetail.getResponseCode() == 401 || responseDetail.getResponseCode() == 403 ){
+			return 401;
+		}
+		List chainrSpecJSON = JsonUtils.classpathToList( "/json/sample/spec.json" );
+        Chainr chainr = Chainr.fromSpec( chainrSpecJSON );
+        return chainr.transform( JsonUtils.jsonToObject(data) );
+	}	
+	
 }

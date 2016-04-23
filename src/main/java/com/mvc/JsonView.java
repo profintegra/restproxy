@@ -33,7 +33,7 @@ public class JsonView implements View {
             response.setHeader("Access-Control-Allow-Origin", "*");
             response.setHeader("Access-Control-Allow-Headers", "*");
             response.setHeader("Access-Control-Allow-Credentials", "true");
-            response.setHeader("Access-Control-Expose-Headers", "Token");
+            response.setHeader("Access-Control-Expose-Headers", "*");
             if(this.responseDetail.getResponseCode() == 401 || this.responseDetail.getResponseCode() == 403){
             	response.setStatus(401);
             }else if(StringUtils.isNotBlank(this.responseDetail.getToken())){

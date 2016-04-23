@@ -1,0 +1,45 @@
+[
+	{
+		"operation": "cardinality",
+		"spec": {
+			"atom:feed": {
+				"atom:entry": "MANY"
+			}
+		
+		}
+	},
+  	{
+	    "operation": "shift",
+	    "spec": {
+	      "atom:feed": {
+	        "atom:entry": {
+	          "*": {
+	            "@": "commonConnector.search/searchEntry[&]"
+	          }
+	        },
+	        "search:facets": {
+	          "*": {
+	            "atom:title": "commonConnector.search/searchSuggestionFilter[#2].title",
+	            "atom:category": "commonConnector.search/searchSuggestionFilter[#2].category",
+	            "search:facetType": "commonConnector.search/searchSuggestionFilter[#2].facetType",
+	            "search:facetName": "commonConnector.search/searchSuggestionFilter[#2].facetName",
+	            "search:start": "commonConnector.search/searchSuggestionFilter[#2].start",
+	            "search:end": "commonConnector.search/searchSuggestionFilter[#2].end",
+	            "$": "commonConnector.search/searchSuggestionFilter[#2].id"
+	          }
+	        },
+	        "opensearch:totalResults": "commonConnector.search/suggestionDetail.totalResult",
+	        "opensearch:itemsPerPage": "commonConnector.search/suggestionDetail.itemPerPage",
+	        "opensearch:startIndex": "commonConnector.search/suggestionDetail.startIndex"
+	      }
+	    }
+	},
+	{
+		"operation": "default",
+		"spec": {
+			"commonConnector":{				
+					"id": 0				
+			}
+		}
+	}
+]
